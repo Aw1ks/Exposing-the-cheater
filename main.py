@@ -13,6 +13,24 @@ def repetitions_rolls(num_rolls):
     return average
 
 
+def add_sigma_lines(plt, dispersion, sigma, level, color, label=None):
+    left = dispersion - level * sigma
+    right = dispersion + level * sigma
+    plt.axvline(
+        left, 
+        color=color, 
+        linestyle='--', 
+        linewidth=3, 
+        label=label
+    )
+    plt.axvline(
+        right, 
+        color=color, 
+        linestyle='--', 
+        linewidth=3
+    )
+
+
 def main():
     num_rolls = 10000
     num_repetitions = 2000
@@ -34,6 +52,20 @@ def main():
     plt.xlim(3.4, 3.6)
     plt.ylim(0, 600)
     plt.grid(True, alpha=0.2)
+
+    plt.axvline(
+        overall_average, 
+        color='red', 
+        linestyle='--', 
+        linewidth=3, 
+        label=f'Среднее значение {overall_average}'
+    )
+
+    add_sigma_lines(plt, overall_average, std_dev, 1, 'black', f'1 сигма {overall_average}')
+    add_sigma_lines(plt, overall_average, std_dev, 2, 'green', f'2 сигма {overall_average}')
+
+    plt.legend()
+
     plt.savefig('histogram.png', dpi=300, bbox_inches='tight')
     print('Открываем гистограмму в браузере')
     webbrowser.open('histogram.png')
